@@ -1,0 +1,158 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyP8ZMfpKSaEYMRJeQCziAcq",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/shivanids2008-hue/ITA0616-Machine-learning/blob/main/11th%20exp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "ZhXcSO4tPkZ_",
+        "outputId": "eeb338b1-0a63-48ad-a555-a4dbf18fe7fa"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Credit Score Classification\n",
+            "Accuracy: 1.0\n",
+            "\n",
+            "Confusion Matrix:\n",
+            "[[1 0 0]\n",
+            " [0 1 0]\n",
+            " [0 0 1]]\n",
+            "\n",
+            "Classification Report:\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "        Good       1.00      1.00      1.00         1\n",
+            "        Poor       1.00      1.00      1.00         1\n",
+            "    Standard       1.00      1.00      1.00         1\n",
+            "\n",
+            "    accuracy                           1.00         3\n",
+            "   macro avg       1.00      1.00      1.00         3\n",
+            "weighted avg       1.00      1.00      1.00         3\n",
+            "\n",
+            "\n",
+            "New Customer Credit Score: Good\n"
+          ]
+        }
+      ],
+      "source": [
+        "\n",
+        "# Credit Score Classification using Random Forest\n",
+        "\n",
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.preprocessing import LabelEncoder\n",
+        "from sklearn.metrics import accuracy_score, confusion_matrix\n",
+        "from sklearn.metrics import classification_report\n",
+        "\n",
+        "# Create dataset\n",
+        "data = {\n",
+        "    'Income': [25000, 30000, 45000, 50000, 60000,\n",
+        "               70000, 80000, 35000, 90000, 55000,\n",
+        "               20000, 75000, 40000, 65000, 85000],\n",
+        "\n",
+        "    'Age': [22, 25, 30, 35, 40, 45, 50, 28, 55,\n",
+        "            38, 21, 48, 32, 42, 52],\n",
+        "\n",
+        "    'LoanAmount': [10000, 15000, 20000, 18000, 25000,\n",
+        "                   30000, 35000, 12000, 40000, 22000,\n",
+        "                   8000, 32000, 16000, 28000, 38000],\n",
+        "\n",
+        "    'PaymentHistory': [2, 3, 5, 6, 7, 8, 9, 3, 9,\n",
+        "                       6, 1, 8, 4, 7, 9],\n",
+        "\n",
+        "    'CreditScore': ['Poor', 'Poor', 'Standard',\n",
+        "                    'Standard', 'Good', 'Good',\n",
+        "                    'Good', 'Poor', 'Good',\n",
+        "                    'Standard', 'Poor', 'Good',\n",
+        "                    'Standard', 'Good', 'Good']\n",
+        "}\n",
+        "\n",
+        "df = pd.DataFrame(data)\n",
+        "\n",
+        "# Separate input and output\n",
+        "X = df.drop('CreditScore', axis=1)\n",
+        "y = df['CreditScore']\n",
+        "\n",
+        "# Encode target labels\n",
+        "encoder = LabelEncoder()\n",
+        "y = encoder.fit_transform(y)\n",
+        "\n",
+        "# Split dataset\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y, test_size=0.2, random_state=42, stratify=y\n",
+        ")\n",
+        "\n",
+        "# Create Random Forest model\n",
+        "model = RandomForestClassifier(\n",
+        "    n_estimators=100, random_state=42\n",
+        ")\n",
+        "\n",
+        "# Train model\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Predict output\n",
+        "y_pred = model.predict(X_test)\n",
+        "\n",
+        "# Display accuracy\n",
+        "print(\"Credit Score Classification\")\n",
+        "print(\"Accuracy:\", accuracy_score(y_test, y_pred))\n",
+        "\n",
+        "# Confusion matrix\n",
+        "print(\"\\nConfusion Matrix:\")\n",
+        "print(confusion_matrix(y_test, y_pred))\n",
+        "\n",
+        "# Classification report\n",
+        "print(\"\\nClassification Report:\")\n",
+        "print(classification_report(\n",
+        "    y_test, y_pred, target_names=encoder.classes_,\n",
+        "    zero_division=0\n",
+        "))\n",
+        "\n",
+        "# Predict new customer credit score\n",
+        "new_customer = pd.DataFrame({\n",
+        "    'Income': [65000],\n",
+        "    'Age': [35],\n",
+        "    'LoanAmount': [20000],\n",
+        "    'PaymentHistory': [8]\n",
+        "})\n",
+        "\n",
+        "prediction = model.predict(new_customer)\n",
+        "\n",
+        "print(\"\\nNew Customer Credit Score:\",\n",
+        "      encoder.inverse_transform(prediction)[0])\n"
+      ]
+    }
+  ]
+}
