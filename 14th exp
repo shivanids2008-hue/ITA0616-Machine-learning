@@ -1,0 +1,141 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMMqQfCpSLcMOlSPpJdNN6Q",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/shivanids2008-hue/ITA0616-Machine-learning/blob/main/14th%20exp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "8fB87tkKUoLx",
+        "outputId": "57592b51-eef1-4137-802d-546dc158d28a"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "House Price Dataset:\n",
+            "   Area  Bedrooms  Bathrooms  Age    Price\n",
+            "0  1000         2          1   10  2000000\n",
+            "1  1200         2          2    8  2500000\n",
+            "2  1500         3          2    5  3500000\n",
+            "3  1800         3          2    7  4000000\n",
+            "4  2000         3          3    4  4500000\n",
+            "5  2200         4          3    3  5000000\n",
+            "6  2500         4          3    2  6000000\n",
+            "7  2800         4          4    5  6500000\n",
+            "8  3000         5          4    1  7500000\n",
+            "9  3200         5          4    2  8000000\n",
+            "\n",
+            "Actual Prices: [7500000 2500000]\n",
+            "Predicted Prices: [7318097.01492537 2290345.14925373]\n",
+            "\n",
+            "Mean Squared Error: 38521926210.25009\n",
+            "R2 Score: 0.99383649180636\n",
+            "\n",
+            "Predicted House Price: Rs. 4170708.96\n"
+          ]
+        }
+      ],
+      "source": [
+        "\n",
+        "# House Price Prediction using Linear Regression\n",
+        "\n",
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.linear_model import LinearRegression\n",
+        "from sklearn.metrics import mean_squared_error, r2_score\n",
+        "\n",
+        "# Create dataset\n",
+        "data = {\n",
+        "    'Area': [1000, 1200, 1500, 1800, 2000,\n",
+        "             2200, 2500, 2800, 3000, 3200],\n",
+        "\n",
+        "    'Bedrooms': [2, 2, 3, 3, 3, 4, 4, 4, 5, 5],\n",
+        "\n",
+        "    'Bathrooms': [1, 2, 2, 2, 3, 3, 3, 4, 4, 4],\n",
+        "\n",
+        "    'Age': [10, 8, 5, 7, 4, 3, 2, 5, 1, 2],\n",
+        "\n",
+        "    'Price': [2000000, 2500000, 3500000, 4000000,\n",
+        "              4500000, 5000000, 6000000, 6500000,\n",
+        "              7500000, 8000000]\n",
+        "}\n",
+        "\n",
+        "# Convert into DataFrame\n",
+        "df = pd.DataFrame(data)\n",
+        "\n",
+        "print(\"House Price Dataset:\")\n",
+        "print(df)\n",
+        "\n",
+        "# Separate input and output\n",
+        "X = df[['Area', 'Bedrooms', 'Bathrooms', 'Age']]\n",
+        "y = df['Price']\n",
+        "\n",
+        "# Split dataset\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y, test_size=0.2, random_state=42\n",
+        ")\n",
+        "\n",
+        "# Create Linear Regression model\n",
+        "model = LinearRegression()\n",
+        "\n",
+        "# Train the model\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Predict house prices\n",
+        "y_pred = model.predict(X_test)\n",
+        "\n",
+        "# Display actual and predicted values\n",
+        "print(\"\\nActual Prices:\", y_test.values)\n",
+        "print(\"Predicted Prices:\", y_pred)\n",
+        "\n",
+        "# Evaluate model\n",
+        "print(\"\\nMean Squared Error:\",\n",
+        "      mean_squared_error(y_test, y_pred))\n",
+        "\n",
+        "print(\"R2 Score:\", r2_score(y_test, y_pred))\n",
+        "\n",
+        "# Predict price of a new house\n",
+        "new_house = pd.DataFrame({\n",
+        "    'Area': [1800],\n",
+        "    'Bedrooms': [3],\n",
+        "    'Bathrooms': [2],\n",
+        "    'Age': [5]\n",
+        "})\n",
+        "\n",
+        "predicted_price = model.predict(new_house)\n",
+        "\n",
+        "print(\"\\nPredicted House Price: Rs.\",\n",
+        "      round(predicted_price[0], 2))\n"
+      ]
+    }
+  ]
+}
