@@ -1,0 +1,163 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyP2OwMx0uvMNM4HzTgUj1rl",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/shivanids2008-hue/ITA0616-Machine-learning/blob/main/19th%20exp\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "MW2bQCpzbK-I",
+        "outputId": "b3854ee2-1f80-4eda-a203-60acd8c63e78"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "BANK LOAN PREDICTION USING NAIVE BAYES\n",
+            "---------------------------------------\n",
+            "Accuracy: 60.0 %\n",
+            "\n",
+            "Confusion Matrix:\n",
+            "[[0 2]\n",
+            " [0 3]]\n",
+            "\n",
+            "Classification Report:\n",
+            "              precision    recall  f1-score   support\n",
+            "\n",
+            "           0       0.00      0.00      0.00         2\n",
+            "           1       0.60      1.00      0.75         3\n",
+            "\n",
+            "    accuracy                           0.60         5\n",
+            "   macro avg       0.30      0.50      0.38         5\n",
+            "weighted avg       0.36      0.60      0.45         5\n",
+            "\n",
+            "\n",
+            "Loan Prediction: Approved\n"
+          ]
+        }
+      ],
+      "source": [
+        "\n",
+        "# Bank Loan Prediction using Naive Bayes\n",
+        "\n",
+        "# Step 1: Import libraries\n",
+        "import pandas as pd\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.naive_bayes import GaussianNB\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "from sklearn.metrics import confusion_matrix\n",
+        "from sklearn.metrics import classification_report\n",
+        "\n",
+        "# Step 2: Create bank loan dataset\n",
+        "data = {\n",
+        "    'Age': [25, 35, 45, 28, 50, 40, 30, 55,\n",
+        "            32, 48, 27, 42, 38, 60, 29, 52,\n",
+        "            36, 46, 31, 58],\n",
+        "    'Income': [25000, 50000, 80000, 30000, 90000,\n",
+        "               65000, 35000, 95000, 40000, 85000,\n",
+        "               28000, 70000, 55000, 100000, 32000,\n",
+        "               92000, 60000, 78000, 45000, 98000],\n",
+        "    'Credit_Score': [550, 700, 780, 580, 800,\n",
+        "                     720, 600, 820, 650, 790,\n",
+        "                     560, 750, 680, 850, 590,\n",
+        "                     810, 710, 770, 660, 840],\n",
+        "    'Loan_Amount': [200000, 300000, 400000, 150000,\n",
+        "                    500000, 350000, 180000, 450000,\n",
+        "                    220000, 420000, 160000, 380000,\n",
+        "                    280000, 550000, 170000, 480000,\n",
+        "                    320000, 410000, 250000, 530000],\n",
+        "    'Employment': [0, 1, 1, 0, 1, 1, 0, 1,\n",
+        "                   1, 1, 0, 1, 1, 1, 0, 1,\n",
+        "                   1, 1, 1, 1],\n",
+        "    'Loan_Status': [0, 1, 1, 0, 1, 1, 0, 1,\n",
+        "                    0, 1, 0, 1, 1, 1, 0, 1,\n",
+        "                    1, 1, 0, 1]\n",
+        "}\n",
+        "\n",
+        "df = pd.DataFrame(data)\n",
+        "\n",
+        "# Step 3: Separate features and target\n",
+        "X = df.drop('Loan_Status', axis=1)\n",
+        "y = df['Loan_Status']\n",
+        "\n",
+        "# Step 4: Split dataset\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y,\n",
+        "    test_size=0.25,\n",
+        "    random_state=42,\n",
+        "    stratify=y\n",
+        ")\n",
+        "\n",
+        "# Step 5: Create Naive Bayes model\n",
+        "model = GaussianNB()\n",
+        "\n",
+        "# Step 6: Train model\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Step 7: Predict test data\n",
+        "y_pred = model.predict(X_test)\n",
+        "\n",
+        "# Step 8: Evaluate model\n",
+        "accuracy = accuracy_score(y_test, y_pred)\n",
+        "\n",
+        "print(\"BANK LOAN PREDICTION USING NAIVE BAYES\")\n",
+        "print(\"---------------------------------------\")\n",
+        "print(\"Accuracy:\", round(accuracy * 100, 2), \"%\")\n",
+        "\n",
+        "print(\"\\nConfusion Matrix:\")\n",
+        "print(confusion_matrix(y_test, y_pred))\n",
+        "\n",
+        "print(\"\\nClassification Report:\")\n",
+        "print(classification_report(\n",
+        "    y_test,\n",
+        "    y_pred,\n",
+        "    zero_division=0\n",
+        "))\n",
+        "\n",
+        "# Step 9: Predict a new applicant\n",
+        "new_applicant = pd.DataFrame([{\n",
+        "    'Age': 35,\n",
+        "    'Income': 60000,\n",
+        "    'Credit_Score': 750,\n",
+        "    'Loan_Amount': 300000,\n",
+        "    'Employment': 1\n",
+        "}])\n",
+        "\n",
+        "prediction = model.predict(new_applicant)\n",
+        "\n",
+        "if prediction[0] == 1:\n",
+        "    print(\"\\nLoan Prediction: Approved\")\n",
+        "else:\n",
+        "    print(\"\\nLoan Prediction: Rejected\")\n"
+      ]
+    }
+  ]
+}
